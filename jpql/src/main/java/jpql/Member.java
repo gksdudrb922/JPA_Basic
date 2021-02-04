@@ -1,8 +1,13 @@
 package jpql;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@NamedQuery(
+        name = "Member.findByUsername",
+        query="select m from Member m where m.username = :username")
 public class Member {
 
     @Id @GeneratedValue
@@ -13,6 +18,9 @@ public class Member {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEAM_ID")
     private Team team;
+
+    @OneToMany(mappedBy = "member")
+    private List<Order> orders = new ArrayList<Order>();
 
     @Enumerated(EnumType.STRING)
     private MemberType type;
@@ -62,6 +70,14 @@ public class Member {
         this.age = age;
     }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
     @Override
     public String toString() {
         return "Member{" +
@@ -70,4 +86,6 @@ public class Member {
                 ", age=" + age +
                 '}';
     }
+
+
 }
